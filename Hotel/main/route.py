@@ -1,8 +1,32 @@
 from flask import request, jsonify
 from main import app
-from main.model import Table, TableSchema, table_schema, tables_schema
+from main.model import Table, TableSchema, table_schema, tables_schema, User, user_schema, users_schema, UserSchema, payment_schema, payments_schema, Payment, PaymentSchema, Hotel, hotel_schema, hotels_schema, HotelSchema, Menu, menu_schema, menus_schema, MenuSchema, Waiter, WaiterSchema, waiter_schema, waiters_schema, Order, OrderSchema, order_schema, orders_schema, Transaction, TransactionSchema, transaction_schema, transactions_schema, Booking, BookingSchema, booking_schema, bookings_schema, Chef, ChefSchema, chef_schema, chefs_schema
 from flask_marshmallow import Marshmallow
 from main import db
+
+@app.route("/user", methods=["POST"])
+def add_user():
+    user_name = request.form['username']
+    password = request.form['password']
+    name = request.form['name']
+    phone = request.form['phone']
+    email = request.form['email']
+    user_type = request.form['user_type']
+    
+    
+    new_user = User(user_name, password, name, phone, email, user_type)
+
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify(new_user)
+
+
+# endpoint to show all users
+@app.route("/user", methods=["GET"])
+def get_user():
+    all_users = User.query.all()
+    result = users_schema.dump(all_users)
+    return jsonify(result.data)
 
 
 
@@ -342,34 +366,10 @@ from main import db
 
 #     return trans_schema.jsonify(trans)
 
-# # endpoint to create new user
-# @app.route("/user", methods=["POST"])
-# def add_user():
-#     username = request.form['username']
-#     email = request.form['email']
-#     userid = request.form['userid']
-#     userfirstname = request.form['userfirstname']
-#     userlastname = request.form['userlastname']
-#     userphone = request.form['userphone']
-#     userpass = request.form['userpass']
-    
-    
-    
-    
-#     new_user = User(userid,userfirstname,userlastname,userphone,email, username, userpass)
-
-#     db.session.add(new_user)
-#     db.session.commit()
-
-#     return jsonify(new_user)
 
 
-# # endpoint to show all users
-# @app.route("/user", methods=["GET"])
-# def get_user():
-#     all_users = User.query.all()
-#     result = users_schema.dump(all_users)
-#     return jsonify(result.data)
+
+
 
 
 # # endpoint to get user detail by id
