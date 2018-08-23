@@ -21,6 +21,36 @@ def add_user():
     return jsonify(new_user)
 
 
+
+@app.route("/")
+def func():
+    return "working"
+    
+@app.route("/isRegisteredUser/<phone>", methods=["GET"])
+def isRegisteredUser(phone):
+    data = User.query.filter_by(phone= phone).first()
+    if (data.phone != phone) :
+        return jsonify("False")
+    else :
+        return jsonify("True")
+
+@app.route("/isValidUser", methods=["GET"])
+def isValidUser():
+    phone = request.args['phone']
+    password = request.args['password']
+    user_type = request.args['user_type']
+
+
+
+    data = User.query.filter_by(phone= phone).first()
+    # return user_schema.jsonify(data)
+
+    if(data.password == password and data.user_type == user_type) :
+        return jsonify("True")
+    else :
+        return jsonify("False")
+
+
 # endpoint to show all users
 @app.route("/user", methods=["GET"])
 def get_user():
